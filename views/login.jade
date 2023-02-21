@@ -1,0 +1,24 @@
+extends layout
+
+block content
+    h1= title
+    if alertmessage
+        p(style="color: red")=alertmessage
+    else
+        p Please enter your details below to login:
+    form(name="login", action="/login", method="post" class="formpost")
+        label Username: 
+        br
+        input(type="text", name="user")
+        br
+        label Password: 
+        br
+        input(type="password", name="pass")
+        br
+        br
+        div(class="g-recaptcha", data-sitekey="6LduwSgTAAAAACW-jsTwnlqqAdpwBiK_iuO4jq8q")
+        br
+        br
+        input(type="submit", value="Login")
+        
+        a(href ="/register") Register

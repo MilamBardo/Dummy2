@@ -1,0 +1,42 @@
+extends ../layoutblog
+
+block content
+    if alertmessage
+        p(style="color: red")=alertmessage
+    if loggedin && isadmin
+        a(href ="/blog/addpost") Add New Post
+    if posts
+        each val in posts
+            //- if loggedin && isadmin
+            //-     form(name="editpost", action="/blog/editpost", method="get")
+            //-         input(type="hidden", name="postid" value=val.id)
+            //-         input(type="submit", value="editpost")
+
+            div(class="article")
+                div(class="articlebackground")
+                    h1
+                        if (val.posturl)
+                            a(href ="/"+val.posturl+"-"+val.id)= val.posttitle
+                        else
+                            a(href ="/"+val.posttitle+"-"+val.id)= val.posttitle
+                    h2
+                        time= (moment(val.postdate).format('MMM Do YYYY'))
+                
+                    if val.imagefilepath
+                        div(class="articleimage")
+                            if val.orientation=="L"
+                                img(class="articlelandscapeimage", src=val.imagefilepath, alt=val.imagealt, title=val.imagealt)
+                            else
+                                img(class="articleportraitimage", src=val.imagefilepath, alt=val.imagealt, title=val.imagealt)
+                    if val.postimagecaption != undefined
+                        br
+                        Label(style="font-size: 0.75em;")!=val.postimagecaption
+                    p(class="articlemainparagraph")!=val.postexcerpt
+                    if (val.posturl)
+                            a(href ="/"+val.posturl+"-"+val.id) Read More
+                        else
+                            a(href ="/"+val.posttitle+"-"+val.id) Read More
+        if morepostsavailable
+            a(href ="/blog/getnextpage/"+startdate, style="float:right") Next Page
+        if previousstartdate != null && previousstartdate != undefined
+            a(href ="/blog/getpreviouspage/"+previousstartdate, style="float:right") Previous Page

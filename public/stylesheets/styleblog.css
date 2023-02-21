@@ -1,0 +1,100 @@
+g-plusone {margin-left:30%;}
+
+body {
+  font: 1em "Courier Regular";
+  /* background-image: url("../images/HomePage/Underpass-cyberpunk-bw-small.jpg"); */
+    /*background-image: url("../images/HomePage/BlueSubwayTile2.jpg");*/
+    /* background-size:     cover;  */                    /* <------ */
+    /*background-repeat:   repeat;
+    background-attachment: fixed;*/
+} 
+
+
+/*body {
+  font: 1em "Courier Regular";
+  background-color: white;
+}*/
+
+a {
+  color: #00B7FF;
+}
+
+#container{
+    width: 100%; height:100%;display:inline-block; margin-top:1%;}
+
+.navdiv{ float:right; padding:2%; text-align:left; width: 15%; background-color: white; color:black; border: 1px solid black;}
+.navvertical{ height: 100%;margin-top: 5%; }
+.navvertical > ul{list-style-type: none; color:black}
+
+.navvertical a {font-family: Courier New, Courier, monospace; font-size: 1em; 
+color:black; text-align: center; margin-right: 1%;  text-decoration: none;  }
+.navvertical a:hover {color:blue;}
+/* background-image: url("../images/Nav/NavBlank.png"); */
+.navvertical img {margin-right:5%;}
+/*.navlinks{margin-bottom: 40px;}*/
+
+.footer {font-family: Courier New, Courier, monospace ; font-weight: normal; font-size: 0.5em; margin-right: 2%;}
+
+.maincontent{float:left; width: 80%; border: 1px solid black;}
+
+.article {  color:black; background-color: white;   }
+.article heading {color:black; background-color: white;    }
+.article  h1 a {color: black; text-decoration: none; font-size: 0.75em;}
+.article  h1 a:hover { text-decoration: underline; font-size: 0.75em;}
+.article  h2{color: black; text-decoration: none; font-size: 0.75em; font-weight: normal;}
+.article p {color:black; background-color: white;  white-space: pre-wrap;  }
+.articlebackground {background-color: white; padding: 2%;}
+.articleimage{ align-content: center; width:100%;}
+.articlelandscapeimage {width:60%; height:auto; display:block;}
+.articleportraitimage {width:30%; height:auto; display:block;}
+.formpost { border: 1px solid black; padding: 20px;}
+
+.bioarticle {padding: 10px; margin:auto; }
+/*.bioarticle p{width: 70%;} */
+.articlemainparagraph {font-family: Courier New, Courier, monospace; font-weight: normal;}
+.blogposttitlehref{  font: 20px "Courier New, Courier, monospace"; font-weight: bold; text-decoration: none; color: black;}
+
+.articleAdvertisement{border:1px solid black;}
+.articleAdvertisement img{padding: 10%;}
+
+.purchasebutton {
+    background-color: pink; /* Green */
+    border: none;
+    color: white;
+    /*padding: 16px 32px; */
+    padding: 0.5% 0.5%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.6em;
+    /* margin: 4px 2px; */
+    margin: 0;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    
+}
+
+.purchasebutton1 {
+    background-color: white; 
+    color: black; 
+    border: 4px solid pink; ;
+    
+}
+
+.purchasebutton1:hover {
+    background-color:pink;
+    color: white;
+}
+
+.purchasebutton a {
+   
+    text-decoration: none;
+    color: black;
+}
+.purchasebutton1 a:hover {
+    background-color: pink;
+    color: white;
+}
+
+.footer {width:50%; font-weight: normal; font-size: 0.75em }

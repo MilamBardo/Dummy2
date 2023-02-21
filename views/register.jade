@@ -1,0 +1,28 @@
+extends layout
+
+block content
+  h1= title
+  if alertmessage
+    p(style="color: red")= alertmessage
+  p Please enter your details below to register
+  form(name="register", action="/registerprocess", method="post", class="formpost")
+    label Username:
+    br
+    input(type="text", name="username")
+    br
+    label Password:
+    br
+    input(type="password", name="password")
+    br
+    label Email:
+    br
+    input(type="email", name="email")
+    br
+    label Confirm Email:
+    br
+    input(type="email", name="confirmemail")
+    br
+    <div class="g-recaptcha" data-sitekey="6LduwSgTAAAAACW-jsTwnlqqAdpwBiK_iuO4jq8q"></div>
+    br
+    br
+    input(type="submit", value="register") 

@@ -1,0 +1,260 @@
+-- Table: public.galleries
+
+-- DROP TABLE public.galleries;
+
+CREATE TABLE public.galleries
+(
+  galleryid integer NOT NULL DEFAULT nextval('galleries_galleryid_seq'::regclass),
+  galleryname character varying(200) NOT NULL,
+  isdefault boolean NOT NULL,
+  isprivate boolean NOT NULL,
+  datecreated timestamp without time zone NOT NULL,
+  CONSTRAINT galleries_pkey PRIMARY KEY (galleryid)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.galleries
+  OWNER TO "Almos";
+  
+-- Table: public.galleryimages
+
+-- DROP TABLE public.galleryimages;
+
+CREATE TABLE public.galleryimages
+(
+  galleryimageid integer NOT NULL DEFAULT nextval('galleryimages_galleryimageid_seq'::regclass),
+  galleryid integer NOT NULL,
+  imageid integer NOT NULL,
+  galleryimageordernumber integer NOT NULL,
+  galleryimagecaption text NOT NULL,
+  sizecontrollingdimension character varying(20) NOT NULL,
+  sizecontrollingpercentage character varying(100) NOT NULL,
+  datecreated timestamp without time zone NOT NULL,
+  CONSTRAINT galleryimages_pkey PRIMARY KEY (galleryimageid)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.galleryimages
+  OWNER TO "Almos";
+
+  
+-- Table: public.imageinfos
+
+-- DROP TABLE public.imageinfos;
+
+CREATE TABLE public.imageinfos
+(
+  imageid integer NOT NULL DEFAULT nextval('imageinfos_imageid_seq'::regclass),
+  imagename character varying(300) NOT NULL,
+  imagefilepath character varying(500) NOT NULL,
+  imagetitle character varying(500) NOT NULL,
+  imagealt text NOT NULL,
+  datecreated timestamp without time zone NOT NULL,
+  height integer,
+  width integer,
+  orientation character varying(5),
+  CONSTRAINT imageinfos_pkey PRIMARY KEY (imageid)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.imageinfos
+  OWNER TO "Almos";
+
+  
+-- Table: public.postimages
+
+-- DROP TABLE public.postimages;
+
+CREATE TABLE public.postimages
+(
+  postimageid integer NOT NULL DEFAULT nextval('postimages_postimageid_seq'::regclass),
+  postid integer NOT NULL,
+  imageid integer NOT NULL,
+  postimagecaption text,
+  sizecontrollingdimension character varying(20) NOT NULL,
+  sizecontrollingpercentage character varying(100) NOT NULL,
+  imagetype character varying(50) NOT NULL,
+  imagetypeorder integer NOT NULL,
+  datecreated timestamp without time zone NOT NULL,
+  CONSTRAINT postimages_pkey PRIMARY KEY (postimageid)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.postimages
+  OWNER TO "Almos";
+
+  
+-- Table: public.posts
+
+-- DROP TABLE public.posts;
+
+CREATE TABLE public.posts
+(
+  id integer NOT NULL DEFAULT nextval('posts_id_seq'::regclass),
+  posttitle character varying(200) NOT NULL,
+  postbody text NOT NULL,
+  postdate timestamp without time zone NOT NULL,
+  posturl character varying(100),
+  CONSTRAINT posts_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.posts
+  OWNER TO "Almos";
+  
+ -- Table: public.session
+
+-- DROP TABLE public.session;
+
+CREATE TABLE public.session
+(
+  sid character varying NOT NULL,
+  sess json NOT NULL,
+  expire timestamp(6) without time zone NOT NULL,
+  CONSTRAINT session_pkey PRIMARY KEY (sid)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.session
+  OWNER TO "Almos";
+
+  
+-- Table: public.users
+
+-- DROP TABLE public.users;
+
+CREATE TABLE public.users
+(
+  id integer NOT NULL DEFAULT nextval('users_id_seq'::regclass),
+  name character varying(200) NOT NULL,
+  encryptedpassword character varying(300) NOT NULL,
+  email character varying(200) NOT NULL,
+  lockedout boolean NOT NULL,
+  loginattempts integer NOT NULL,
+  isadmin boolean NOT NULL DEFAULT false,
+  isverified boolean NOT NULL DEFAULT false,
+  created timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT users_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.users
+  OWNER TO "Almos";
+
+
+  
+CREATE TABLE public.galleries
+(
+  galleryid SERIAL PRIMARY KEY NOT NULL ,
+  galleryname character varying(200) NOT NULL,
+  isdefault boolean NOT NULL,
+  isprivate boolean NOT NULL,
+  datecreated timestamp without time zone NOT NULL
+)
+  
+
+
+CREATE TABLE public.galleryimages
+(
+  galleryimageid SERIAL PRIMARY KEY,
+  galleryid integer NOT NULL,
+  imageid integer NOT NULL,
+  galleryimageordernumber integer NOT NULL,
+  galleryimagecaption text NOT NULL,
+  sizecontrollingdimension character varying(20) NOT NULL,
+  sizecontrollingpercentage character varying(100) NOT NULL,
+  datecreated timestamp without time zone NOT NULL
+);
+
+  
+-- Table: public.imageinfos
+
+-- DROP TABLE public.imageinfos;
+
+CREATE TABLE public.imageinfos
+(
+  imageid SERIAL PRIMARY KEY,
+  imagename character varying(300) NOT NULL,
+  imagefilepath character varying(500) NOT NULL,
+  imagetitle character varying(500) NOT NULL,
+  imagealt text NOT NULL,
+  datecreated timestamp without time zone NOT NULL,
+  height integer,
+  width integer,
+  orientation character varying(5)
+);
+
+  
+-- Table: public.postimages
+
+-- DROP TABLE public.postimages;
+
+CREATE TABLE public.postimages
+(
+  postimageid SERIAL PRIMARY KEY,
+  postid integer NOT NULL,
+  imageid integer NOT NULL,
+  postimagecaption text,
+  sizecontrollingdimension character varying(20) NOT NULL,
+  sizecontrollingpercentage character varying(100) NOT NULL,
+  imagetype character varying(50) NOT NULL,
+  imagetypeorder integer NOT NULL,
+  datecreated timestamp without time zone NOT NULL
+);
+
+  
+-- Table: public.posts
+
+-- DROP TABLE public.posts;
+
+CREATE TABLE public.posts
+(
+  id SERIAL PRIMARY KEY,
+  posttitle character varying(200) NOT NULL,
+  postbody text NOT NULL,
+  postdate timestamp without time zone NOT NULL,
+  posturl character varying(100)
+);
+  
+ -- Table: public.session
+
+-- DROP TABLE public.session;
+
+CREATE TABLE public.session
+(
+  sid character varying NOT NULL,
+  sess json NOT NULL,
+  expire timestamp(6) without time zone NOT NULL
+);
+
+  
+-- Table: public.users
+
+-- DROP TABLE public.users;
+
+CREATE TABLE public.users
+(
+  id SERIAL PRIMARY KEY,
+  name character varying(200) NOT NULL,
+  encryptedpassword character varying(300) NOT NULL,
+  email character varying(200) NOT NULL,
+  lockedout boolean NOT NULL,
+  loginattempts integer NOT NULL,
+  isadmin boolean NOT NULL DEFAULT false,
+  isverified boolean NOT NULL DEFAULT false,
+  created timestamp with time zone NOT NULL DEFAULT now()
+);
+
+
+  
+
+
+  
+  

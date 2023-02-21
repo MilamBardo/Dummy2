@@ -1,0 +1,246 @@
+extends ../layout
+
+block content
+    script. 
+        var gallery = !{JSON.stringify(gallery)};
+        var gimages = !{JSON.stringify(galleryimages)};
+        var oimages = !{JSON.stringify(otherimages)};
+        //use this when dynamically adding further gallery images later
+        var imagecount = 0;
+        if (gimages != undefined && gimages != 0)
+        {
+            imagecount = gimages.length;
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.parentElement.id);
+        }
+        
+        function drop(ev) {
+            ev.preventDefault();
+            var destinationparent;
+            if (ev.target.id.startsWith("gdiv-") )
+            {
+                destinationparent = ev.target.id;
+            }
+            else if(ev.target.id.startsWith("gimg-") )
+            {
+                var destinationparent = ev.target.parentElement;
+            }
+            else
+            {
+                return;
+            }
+            var destinationsourceid = ev.dataTransfer.getData("text");
+            var destinationsource = document.getElementById(destinationsourceid);
+            var transferringimage = destinationsource.children[0].id;
+            var destinationexistingimage = destinationparent.children[0].id;
+            destinationparent.appendChild(document.getElementById(transferringimage));
+            destinationsource.appendChild(document.getElementById(destinationexistingimage));
+        }
+
+        function binit(ev) {
+            ev.preventDefault();
+            
+            var r = confirm("Are you sure you wish to delete this image from the gallery?");
+            if (r == true)
+            {
+                var destinationsourceid = ev.dataTransfer.getData("text");
+                var destinationsource = document.getElementById(destinationsourceid);
+                var deletingimage = destinationsource.children[0];
+
+                var request = new XMLHttpRequest();
+                
+                request.open('Post', '/admin/deleteImageFromGallery', true);
+                request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                request.onload = function() {
+                    if (request.status >= 200 && request.status < 400) {
+                        var data = JSON.parse(request.responseText);
+                        alert(data);
+                    } else {
+                        // We reached our target server, but it returned an error
+                        alert("Deleted failed on server");
+                    }
+                };
+
+                request.onerror = function() {
+                // There was a connection error of some sort
+                    alert("REQUEST ERROR");
+                };
+                //alert("sending request...");
+
+                
+                var galleryimageidstring = deletingimage.id;
+                if (galleryimageidstring.includes("gimg-o") == false)
+                {
+                    //deleted from gallery as is not a newly added item
+                    galleryimageidstring = galleryimageidstring.replace("gimg-", "");
+                    galleryimageid = galleryimageidstring;
+                    var jsonArr = [];
+                    jsonArr.push({
+                        galleryimageid: galleryimageid
+                    });
+                    request.send(JSON.stringify(jsonArr));
+                }
+                
+
+                //in the mean time
+                var imagediv = destinationsource;
+                imagediv.removeChild(deletingimage);
+                imagediv.parentElement.removeChild(imagediv);
+                
+             }
+        }
+
+        function saveGallery()
+        {
+
+            var sortingdivs  = document.getElementsByName("gdiv");
+            var jsonArr = [];
+            var galleryid = gallery.galleryid;
+            //-alert(sortingdivs.length);
+            for (var i = 0; i < sortingdivs.length; i++) {
+                var sortedimage = sortingdivs[i].children[0];
+                var galleryimageidstring =  sortedimage.id;
+                var galleryimageid = "";
+                var imageid=sortedimage.name;
+                if (galleryimageidstring.includes("gimg-o") == false)
+                {
+                    galleryimageidstring = galleryimageidstring.replace("gimg-", "");
+                    galleryimageid = galleryimageidstring;
+                }
+                
+
+                //-alert(galleryimageid);
+                jsonArr.push({
+                    galleryimageid: galleryimageid,
+                    galleryid: galleryid,
+                    imageid: imageid,
+                    galleryimagesortnumber: i
+                });
+            }
+            
+            //alert(jsonArr);
+            var request = new XMLHttpRequest();
+            
+            request.open('Post', '/admin/saveGallery', true);
+            request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            request.onload = function() {
+                if (request.status >= 200 && request.status < 400) {
+                    var data = JSON.parse(request.responseText);
+                    alert(data);
+                } else {
+                    // We reached our target server, but it returned an error
+                    //alert("SERVER ERROR");
+                }
+            };
+
+            request.onerror = function() {
+            // There was a connection error of some sort
+                alert("REQUEST ERROR");
+            };
+            //alert("sending request...");
+            request.send(JSON.stringify(jsonArr));
+            //alert("request sent");
+
+            return false;
+        }
+
+        function addToGallery(){
+            imagecount++;
+            var imageselect = document.getElementById("otherimageselect");
+            var imageid = imageselect.options[imageselect.selectedIndex].value;
+            //fetch from json
+            var foundimage = null;
+            var found = false;
+            for (var o of oimages){
+                if (o.imageid == imageid){
+                    foundimage = o;
+                    found = true;
+                }
+            }
+
+            if (found)
+            {
+                var portfolio = document.getElementById("galleryedit");
+                var newimagediv = document.createElement("div");
+                var divid = "gdiv-"+imagecount;
+                newimagediv.setAttribute("id", divid);
+                newimagediv.setAttribute("name", "gdiv");
+                newimagediv.setAttribute("style", "display: inline-block; width:20%; border:1px solid black;");
+                newimagediv.setAttribute("ondrop", "drop(event)");
+                newimagediv.setAttribute("ondrop", "drop(event)");
+                newimagediv.setAttribute("ondragover","allowDrop(event)");
+
+                var newimage = document.createElement("img");
+                newimage.setAttribute("id", "gimg-o"+imagecount);
+                newimage.setAttribute("name", foundimage.imageid);
+                newimage.setAttribute("style", "max-width:100%; height:auto;");
+                newimage.setAttribute("src", foundimage.imagefilepath);
+                newimage.setAttribute("draggable", "true");
+                newimage.setAttribute("ondragstart", "drag(event)");
+
+                newimagediv.appendChild(newimage);
+                portfolio.appendChild(newimagediv);
+            }
+        }
+     
+    if gallery
+        div(class="galleryedit", id="galleryedit")
+            if galleryimages
+                -var index = 0
+                each val in galleryimages
+                    div(id = "gdiv-#{++index}", name="gdiv", style="display: inline-block; width:20%; height:20%; border:1px solid black;", ondrop="drop(event)", ondragover="allowDrop(event)" )
+                        img(id="gimg-#{val.galleryimageid}", name="#{val.imageid}", style="width:100%; height:auto;", src=val.imagefilepath, alt=val.imagealt, title=val.imagealt, draggable="true"
+ondragstart="drag(event)")
+        div(class="bin" )
+            img(id="bin", name="bin",  src="/images/Gallery/bin.jpg", ondrop="binit(event)",  ondragover="allowDrop(event)" )
+        br
+        select(style="display:block", name="selectedimage", id="otherimageselect")
+            if otherimages
+                if otherimages != undefined
+                    each val in otherimages
+                        option(value=val.imageid)=val.imagename
+        p(onclick="addToGallery()") Add image to gallery
+
+        br
+        p(onclick="saveGallery()") Save gallery
+        br
+
+        form(name="editgallery",  action="/admin/editgallery", method="post")
+            div
+                label Gallery Name:
+            div
+                input(
+                    type="hidden",
+                    name="galleryid",
+                    value=gallery.galleryid)
+                input(
+                    type="text",
+                    name="galleryname",
+                    value=gallery.galleryname
+                )
+            div
+                label Gallery is Private?
+            div
+                input(
+                    type="checkbox",
+                    name="galleryisprivate",
+                    checked=(gallery.isprivate==true ? "checked" : undefined)
+                    )
+            div
+                label Is Default Gallery?
+            div
+                input(
+                    type="checkbox",
+                    name="isdefault"
+                    ,
+                    checked=(gallery.isdefault==true ? "checked" : undefined)
+                    
+                )
+            br
+            input(type="submit", value="Save Gallery Edit")
+        

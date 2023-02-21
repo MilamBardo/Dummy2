@@ -1,0 +1,389 @@
+extends ../layout
+
+block content
+    script. 
+        var gimages = !{JSON.stringify(mainportfolio.galleryimages)};
+        var selectedgalleryid = !{JSON.stringify(mainportfolio.galleryid)};
+        //var selectedgalleryid= gallery[0].galleryid;
+
+        function viewimage(ev)
+        {
+            //alert("into view image");
+            var imagetoview = ev.target;
+            var fullimage;
+
+            var targetid = imagetoview.id.replace("gt-", "");
+            for (var im of gimages)
+            {
+                if (im.imageid == targetid)
+                {
+                    fullimage=im;
+                }
+            }
+
+            var portfolioviewerdiv = document.getElementById("portfolioviewer");
+            //delete old image
+            while (portfolioviewerdiv.firstChild) {
+                    portfolioviewerdiv.removeChild(portfolioviewerdiv.firstChild);
+            }
+
+            //create new image box
+            var newdiv = document.createElement("div");
+
+            if (fullimage.orientation == "L")
+            {
+                newdiv.setAttribute("class", "portfolioviewboxlandscape");   
+            }
+            else
+            {
+                newdiv.setAttribute("class", "portfolioviewboxportrait"); 
+            }
+            var newimage = document.createElement("img");
+            newimage.setAttribute("src", fullimage.imagefilepath);
+            newimage.setAttribute("alt", fullimage.imagealt);
+            newimage.setAttribute("title", fullimage.imagealt);
+            newimage.setAttribute("imagebuylink", fullimage.imagebuylink);
+            //- if (fullimage.orientation == "P")
+            //- {
+            //-     newimage.setAttribute("style", "width:40%; height:auto;");
+            //- }
+            //- else{
+            //-     newimage.setAttribute("style", "max-width:100%; height:auto;");
+            //- }
+
+            newdiv.appendChild(newimage);
+            portfolioviewerdiv.appendChild(newdiv);
+            if (fullimage.imagebuylink != undefined && fullimage.imagebuylink != "")
+                {
+                    var purchasebutton = document.createElement("a");
+                    purchasebutton.setAttribute("href", fullimage.imagebuylink );
+                    purchasebutton.setAttribute("class", "purchasebutton purchasebutton1");
+                    purchasebutton.setAttribute("style", "float:right;")
+                    purchasebutton.text = "Purchase";
+                    portfolioviewerdiv.appendChild(purchasebutton);
+                }
+            
+
+        }
+
+        function viewgallery(galleryid)
+        {
+            var jsonArr = [];
+             jsonArr.push({
+                    galleryid: galleryid
+                });
+            
+            //alert(galleryid);
+            //- //alert(jsonArr);
+            var request = new XMLHttpRequest();
+            
+            request.open('Post', '/portfolio/fetchGallery', true);
+            request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            request.onload = function() {
+                 if (request.status >= 200 && request.status < 400) {
+                     var data = JSON.parse(request.responseText);
+                     displayGallery(data);
+                 } else {
+                    // We reached our target server, but it returned an error
+                    alert("SERVER ERROR"+request.status);
+                }
+            };
+
+            request.onerror = function() {
+            // There was a connection error of some sort
+                alert("REQUEST ERROR");
+            };
+            //alert("sending request...");
+            request.send(JSON.stringify(jsonArr));
+
+            //return false;
+        }
+
+        function displayGallery(gallery)
+        {
+            //change gallery highlight
+            var navchildren = document.getElementById('nav-galleries').childNodes;
+            var navarray = Array.from(navchildren);
+            for (var child of navarray)
+            {
+                if (child.name == gallery.galleryid)
+                {
+                    child.setAttribute("style", "display: inlineblock; text-decoration: none; margin-right: 2%; border: 4px solid pink;");
+                }
+                else
+                {
+                    child.setAttribute("style", "display: inlineblock; text-decoration: none; margin-right: 2%;");
+                }
+                
+            }
+            gimages = gallery.galleryimages;
+            //alert("into display gallery");
+                //Delete existing images
+                //Delete mainimage
+                var portfolioviewer = document.getElementById("portfolioviewer");
+                //alert("portfolioviewer="+portfolioviewer);
+                //- if ( (portfolioviewer.children != undefined) && (portfolioviewer.children.length > 0))
+                //- {
+                //-     for (var c of portfolioviewer.children)
+                //-     {
+                //-         alert("removed portfolioviewer child");
+                //-         portfolioviewer.removeChild(c);
+                //-     }
+                //- }
+
+                while (portfolioviewer.hasChildNodes()) {
+                    portfolioviewer.removeChild(portfolioviewer.lastChild);
+                }
+                
+                //now delete smaller images
+                var portfolio = document.getElementById("portfolio");
+                while (portfolio.hasChildNodes()) {
+                    portfolio.removeChild(portfolio.lastChild);
+                }
+
+                //add main image
+                var portfolioviewbox = document.createElement("div");
+                if (gallery.galleryimages && gallery.galleryimages.length > 0)
+                {
+                    if (gallery.galleryimages[0].orientation == "L")
+                    {
+                        portfolioviewbox.setAttribute("class", "portfolioviewboxlandscape");
+                    }
+                    else
+                    {
+                        portfolioviewbox.setAttribute("class", "portfolioviewboxportrait");
+                    }
+                }
+
+                var mainimage = document.createElement("img");
+                mainimage.setAttribute("src", gallery.galleryimages[0].imagefilepath);
+                mainimage.setAttribute("alt", gallery.galleryimages[0].imagealt);
+                mainimage.setAttribute("title", gallery.galleryimages[0].imagealt);
+                
+
+                if (gallery.galleryimages[0].orientation == "P")
+                {
+                    mainimage.setAttribute("style", "width:40%;");
+                }
+
+                
+                
+
+                portfolioviewbox.appendChild(mainimage);
+                portfolioviewer.appendChild(portfolioviewbox);
+
+                if (gallery.galleryimages[0].imagebuylink != undefined && gallery.galleryimages[0].imagebuylink != "")
+                {
+                    var purchasebutton = document.createElement("a");
+                    purchasebutton.setAttribute("href", gallery.galleryimages[0].imagebuylink );
+                    purchasebutton.setAttribute("class", "purchasebutton purchasebutton1");
+                    purchasebutton.setAttribute("style", "float:right;")
+                    purchasebutton.text = "Purchase";
+                    portfolioviewer.appendChild(purchasebutton);
+                }
+
+                //add smaller images
+                var portfolioimages = gallery.galleryimages;
+                if (portfolioimages != undefined && portfolioimages.length > 0)
+                {
+                    for (var timg of portfolioimages)
+                    {
+                        var thumbnaildiv = document.createElement("div");
+                        thumbnaildiv.setAttribute("class", "gallerythumbnail");
+                        thumbnaildiv.setAttribute("style","align-content: center; width: 25%;")
+
+                        var thumbnailimg = document.createElement("img");
+                        thumbnailimg.setAttribute("id", "gt-"+timg.imageid);
+                        thumbnailimg.setAttribute("src", timg.imagefilepath);
+                        thumbnailimg.setAttribute("alt", timg.imagealt);
+                        thumbnailimg.setAttribute("title", timg.imagealt);
+                        thumbnailimg.setAttribute("onclick", "viewimage(event)");
+
+                        
+
+                        thumbnaildiv.appendChild(thumbnailimg);
+                        portfolio.appendChild(thumbnaildiv);
+                    }
+                }
+        }
+
+    div(style="width:100%")
+        if alertmessage
+            p(style="color: red")=alertmessage
+        if loggedin && isadmin && mainportfolio
+            form(name="addimage", action="/portfolio/addportfolioimage", method="get")
+                        input(type="hidden", name="galleryid" value=mainportfolio.galleryid)
+                        input(type="hidden", name="gallerytotal" value=gallerytotal)
+                        input(type="submit", value="addimage")
+                        br
+        nav(width="100%", id="nav-galleries")
+            each gallery in allgallerynames
+                //-var gid= !={JSON.stringify(mainportfolio.galleryid)}
+                if gallery.isdefault == true
+                    a(href="javascript:void(0)", onclick="viewgallery(this.name);", id="galleryli-"+gallery.galleryid, name=gallery.galleryid, style="display: inlineblock; text-decoration: none; margin-right: 2%; border: 4px solid pink;")=gallery.galleryname
+                else
+                    a(href="javascript:void(0)", onclick="viewgallery(this.name);", id="galleryli-"+gallery.galleryid, name=gallery.galleryid, style="display: inlineblock; text-decoration: none; margin-right: 2%;")=gallery.galleryname
+            
+        if mainportfolio
+            br
+            br
+            div(class="portfolioviewer", id="portfolioviewer")
+                if mainportfolio.galleryimages && mainportfolio.galleryimages.length > 0
+                    if mainportfolio.galleryimages[0].orientation = "L"
+                        div(class="portfolioviewboxlandscape")
+                            img(src=mainportfolio.galleryimages[0].imagefilepath, alt=mainportfolio.galleryimages[0].imagealt, title=mainportfolio.galleryimages[0].imagealt)
+                        if (mainportfolio.galleryimages[0].imagebuylink != undefined && mainportfolio.galleryimages[0].imagebuylink != "")
+                            a(href=mainportfolio.galleryimages[0].imagebuylink, class="purchasebutton purchasebutton1", style="float:right") Purchase
+                    else
+                        div(class="portfolioviewboxportrait", style="align-content: center; padding: 5%;")
+                            img(src=mainportfolio.galleryimages[0].imagefilepath, alt=mainportfolio.galleryimages[0].imagealt, title=mainportfolio.galleryimages[0].imagealt)
+                        if (mainportfolio.galleryimages[0].imagebuylink != undefined && mainportfolio.galleryimages[0].imagebuylink != "")
+                            a(href=mainportfolio.galleryimages[0].imagebuylink, class="purchasebutton purchasebutton1", style="float:right") Purchase
+            div(class="portfolio", id="portfolio")
+                if mainportfolio.galleryimages
+                    each val in mainportfolio.galleryimages
+                        div(class="gallerythumbnail", style="align-content: center; width: 25%;")
+                            img(id="gt-"+val.imageid, src=val.imagefilepath, alt=val.imagealt, title=val.imagealt, imagebuylink=val.imagebuylink, onclick="viewimage(event)")
+                            //- if loggedin && isadmin && mainportfolio
+                            //-     form(name="deleteimage", action="/portfolio/deleteportfolioimage", method="post")
+                            //-         input(type="hidden", name="imagefilepath" value=val.imagefilepath)
+                            //-         input(type="hidden", name="imageid" value=val.imageid)
+                            //-         input(type="hidden", name="galleryimageid" value=val.galleryimageid)
+                            //-         input(type="submit", value="delete image")
+                            //-     form(name="editimage", action="/portfolio/editportfolioimage", method="get")
+                            //-         input(type="hidden", name="imageid" value=val.imageid)
+                            //-         input(type="hidden", name="galleryimageid" value=val.galleryimageid)
+                            //-         input(type="submit", value="edit image")
+            
+
+        //- script(type="text/javascript").
+    //-     var scapes = !{JSON.stringify(landscapes)};
+    //-     var landscapeindex = 0;
+
+    //-         function getnextlandscape(){
+    //-             landscapeindex++;
+
+    //-             if (landscapeindex < scapes.length)
+    //-             {
+    //-                 document.getElementById("landscapeimage").src=scapes[landscapeindex].imagefilepath;
+    //-             }
+    //-             else
+    //-             {
+    //-                 landscapeindex--;
+    //-             }
+    //-         }
+
+    //-         function getpreviouslandscape(){
+    //-             landscapeindex--;
+
+    //-             if (landscapeindex > -1)
+    //-             {
+    //-                 document.getElementById("landscapeimage").src=scapes[landscapeindex].imagefilepath;
+    //-             }
+    //-             else
+    //-             {
+    //-                 landscapeindex++;
+    //-             }
+    //-         }
+
+    //-     var pors = !{JSON.stringify(portraits)};
+    //-     var porindex = 0;
+
+    //-         function getpreviousportrait(){
+    //-             porindex--;
+
+    //-             if (porindex > -1)
+    //-             {
+    //-                 document.getElementById("portraitimage").src=pors[porindex].imagefilepath;
+    //-             }
+    //-             else
+    //-             {
+    //-                 porindex--;
+    //-             }
+    //-         }
+    //-         function getnextportrait(){
+    //-             porindex++;
+
+    //-             if (porindex < pors.length)
+    //-             {
+    //-                 document.getElementById("portraitimage").src=pors[porindex].imagefilepath;
+    //-             }
+    //-             else
+    //-             {
+    //-                 porindex--;
+    //-             }
+    //-         }
+    //- else if val.sizecontrollingdimension == "height"
+    //-     div(class="gallerythumbnail", style="align-content: center;  height:"+val.sizecontrollingpercentage)
+    //-         img(src=val.imagefilepath, alt=val.imagealt, title=val.imagealt)
+    //-         if loggedin && isadmin && mainportfolio
+    //-             form(name="deleteimage", action="/portfolio/deleteportfolioimage", method="post")
+    //-                 input(type="hidden", name="imagefilepath" value=val.imagefilepath)
+    //-                 input(type="hidden", name="imageid" value=val.imageid)
+    //-                 input(type="hidden", name="galleryimageid" value=val.galleryimageid)
+    //-                 input(type="submit", value="delete image")
+    //-             form(name="editimage", action="/portfolio/editportfolioimage", method="get")
+    //-                 input(type="hidden", name="imageid" value=val.imageid)
+    //-                 input(type="hidden", name="galleryimageid" value=val.galleryimageid)
+    //-                 input(type="submit", value="edit image")
+            //-     if portraits && portraits.length > 0
+            //-         div(class="gallerythumbnail", style="align-content: center; ")
+            //-             span(onclick="getpreviousportrait()") Prev
+            //-             span(onclick="getnextportrait()") Next
+            //-             img(id="portraitimage", onclick="getnextportrait()", src=portraits[0].imagefilepath, alt=portraits[0].imagealt, title=portraits[0].imagealt)
+            //-             if loggedin && isadmin && mainportfolio
+            //-                 form(name="deleteimage", action="/portfolio/deleteportfolioimage", method="post")
+            //-                     input(type="hidden", name="imagefilepath" value=portraits[0].imagefilepath)
+            //-                     input(type="hidden", name="imageid" value=portraits[0].imageid)
+            //-                     input(type="hidden", name="galleryimageid" value=portraits[0].galleryimageid)
+            //-                     input(type="submit", value="delete image")
+            //-                 form(name="editimage", action="/portfolio/editportfolioimage", method="get")
+            //-                     input(type="hidden", name="imageid" value=portraits[0].imageid)
+            //-                     input(type="hidden", name="galleryimageid" value=portraits[0].galleryimageid)
+            //-                     input(type="submit", value="edit image")
+            //- div(class="portfolio", style="width: 50%; height:50%;")
+
+            //-     if landscapes
+            //-         div(class="gallerythumbnail", style="align-content: center; ")
+            //-             span(onclick="getpreviouslandscape()") Prev
+            //-             span(onclick="getnextlandscape()") Next
+            //-             img(id="landscapeimage", onclick="getnextlandscape()", src=landscapes[0].imagefilepath, alt=landscapes[0].imagealt, title=landscapes[0].imagealt)
+            //-             if loggedin && isadmin && mainportfolio
+            //-                 form(name="deleteimage", action="/portfolio/deleteportfolioimage", method="post")
+            //-                     input(type="hidden", name="imagefilepath" value=landscapes[0].imagefilepath)
+            //-                     input(type="hidden", name="imageid" value=landscapes[0].imageid)
+            //-                     input(type="hidden", name="galleryimageid" value=landscapes[0].galleryimageid)
+            //-                     input(type="submit", value="delete image")
+            //-                 form(name="editimage", action="/portfolio/editportfolioimage", method="get")
+            //-                     input(type="hidden", name="imageid" value=landscapes[0].imageid)
+            //-                     input(type="hidden", name="galleryimageid" value=landscapes[0].galleryimageid)
+            //-                     input(type="submit", value="edit image")
+            //- if mainportfolio.galleryimages
+                //-     each val in mainportfolio.galleryimages
+                //-         if val.sizecontrollingdimension == "width"
+                //-             div(class="gallerythumbnail", style="align-content: center; width:"+val.sizecontrollingpercentage)
+                //-                 img(src=val.imagefilepath, alt=val.imagealt, title=val.imagealt)
+                //-                 if loggedin && isadmin && mainportfolio
+                //-                     form(name="deleteimage", action="/portfolio/deleteportfolioimage", method="post")
+                //-                         input(type="hidden", name="imagefilepath" value=val.imagefilepath)
+                //-                         input(type="hidden", name="imageid" value=val.imageid)
+                //-                         input(type="hidden", name="galleryimageid" value=val.galleryimageid)
+                //-                         input(type="submit", value="delete image")
+                //-                     form(name="editimage", action="/portfolio/editportfolioimage", method="get")
+                //-                         input(type="hidden", name="imageid" value=val.imageid)
+                //-                         input(type="hidden", name="galleryimageid" value=val.galleryimageid)
+                //-                         input(type="submit", value="edit image")
+                //-         else if val.sizecontrollingdimension == "height"
+                //-             div(class="gallerythumbnail", style="align-content: center;  height:"+val.sizecontrollingpercentage)
+                //-                 img(src=val.imagefilepath, alt=val.imagealt, title=val.imagealt)
+                //-                 if loggedin && isadmin && mainportfolio
+                //-                     form(name="deleteimage", action="/portfolio/deleteportfolioimage", method="post")
+                //-                         input(type="hidden", name="imagefilepath" value=val.imagefilepath)
+                //-                         input(type="hidden", name="imageid" value=val.imageid)
+                //-                         input(type="hidden", name="galleryimageid" value=val.galleryimageid)
+                //-                         input(type="submit", value="delete image")
+                //-                     form(name="editimage", action="/portfolio/editportfolioimage", method="get")
+                //-                         input(type="hidden", name="imageid" value=val.imageid)
+                //-                         input(type="hidden", name="galleryimageid" value=val.galleryimageid)
+                //-                         input(type="submit", value="edit image")
+

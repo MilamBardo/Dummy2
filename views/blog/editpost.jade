@@ -1,0 +1,190 @@
+extends ../layout
+
+block content
+    script. 
+        function AddAdvert(caller)
+        {
+            var postid = document.getElementById("postid").value;
+            var parentdiv = caller.parentElement;
+            var advertname = document.getElementById("advertname").value;
+            var adverthtml = document.getElementById("adverthtml").value;
+            var adverttypeselect = document.getElementById("adverttype");
+            var adverttype = adverttypeselect.options[ adverttypeselect.selectedIndex ].value
+
+            var jsonArr = [];
+                    jsonArr.push({
+                        advertname : advertname,
+                        adverthtml : adverthtml,
+                        adverttype : adverttype,
+                    });
+
+            var request = new XMLHttpRequest();
+                    
+            request.open('Post', '/blog/addAdvert', true);
+            request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+                request.onload = function() {
+                    if (request.status >= 200 && request.status < 400) {
+                        var data = JSON.parse(request.responseText);
+                        //alert(data);
+                        var opt = document.createElement('option');
+                        opt.value = data.advertisementid;
+                        opt.innerHTML = data.name;
+                        adverttypeselect.appendChild(opt);
+                    } else {
+                        // We reached our target server, but it returned an error
+                        alert("Deleted failed on server");
+                    }
+                };
+
+                request.onerror = function() {
+                // There was a connection error of some sort
+                    alert("REQUEST ERROR");
+                };
+
+                request.send(JSON.stringify(jsonArr));
+
+            }
+
+            function AddAdvertToPost(caller, position)
+            {
+                var postid = document.getElementById("postid").value;
+                var postadvertsselect = document.getElementById("postadverts");
+                var advertsselect = document.getElementById("adverts");
+                var advertid = advertsselect.options[ advertsselect.selectedIndex ].value
+
+                var jsonArr = [];
+                        jsonArr.push({
+                            postid : postid,
+                            advertid : advertid,
+                            position : position,
+                        });
+
+                var request = new XMLHttpRequest();
+                        
+                request.open('Post', '/blog/addAdvertToPost', true);
+                request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+                    request.onload = function() {
+                        if (request.status >= 200 && request.status < 400) {
+                            var data = JSON.parse(request.responseText);
+                            //alert(data);
+                            var opt = document.createElement('option');
+                            opt.value = data.advertisementid;
+                            opt.innerHTML = data.name+" "+data.position;
+                            postadvertsselect.appendChild(opt);
+                        } 
+                        else 
+                        {
+                            // We reached our target server, but it returned an error
+                            alert("Deleted failed on server");
+                        }
+                    };
+
+                    request.onerror = function() {
+                    // There was a connection error of some sort
+                        alert("REQUEST ERROR");
+                    };
+
+                    request.send(JSON.stringify(jsonArr));
+            }
+
+    if loggedin && isadmin
+        if alertmessage
+            p(style="color: red")=alertmessage
+        form(name="editpost", action="/blog/editpost", method="post", class="formpost")
+            div
+                label Post Title:
+                input(type="hidden", name="postid", id="postid", value=post.id)
+                input(
+                    type="text",
+                    name="posttitle",
+                    value=post.posttitle
+                )
+            div
+                label PostImage
+                if (postimages != undefined && postimages != null && postimages.count > 0)
+                    input(type="hidden", name="currentpostimage" value=postimages[0].postimageid)
+                    select(name="associatedpostimage")
+                        option(value="none") No image selected
+                        if portfolioimages
+                            if postimages != undefined
+                                each val in portfolioimages
+                                    if val.imageid == postimages[0].imageid
+                                        option(value=val.imageid, selected)=val.imagename
+                                    else
+                                        option(value=val.imageid)=val.imagename
+                            else
+                                each val in portfolioimages
+                                    option(value=val.imageid)=val.imagename
+            div
+                Label Image caption:
+                if (postimages != undefined && postimages != null && postimages.count > 0)
+                    textarea(
+                        name="imagecaption", 
+                        cols="70", 
+                        rows="5"
+                        )=postimages[0].postimagecaption
+                else
+                    textarea(
+                        name="imagecaption", 
+                        cols="70", 
+                        rows="5"
+                        )
+            
+            div
+                label Post Excerpt:
+                textarea(
+                    name="postexcerpt", 
+                    cols="120", 
+                    rows="10",
+                    maxlength="500"
+                )=post.postexcerpt
+            div
+                label Post Body:
+                br
+                
+                textarea(
+                    name="postbody", 
+                    cols="120", 
+                    rows="20"
+                )=post.postbody
+            br
+            div(style="border: 1px solid black;")
+                label(style="float:left;")  ADverts:
+                br
+                div(style="float:left;")
+                    
+                    Label Ad Name
+                    input(type="text", name="advertname", id="advertname")
+                    Label Ad html
+                    input(type="text", name="adverthtml", id="adverthtml")
+                    select(name="adverttype", id="adverttype" )
+                         if adverttypes
+                            each val in adverttypes
+                                option(value=val.advertisementtypeid)=val.advertisementtype
+
+                    button(class="purchasebutton purchasebutton1", onclick="AddAdvert(this)") Add Ad
+                    
+                br
+                div(style="clear:both; border: 1px solid black;")
+                    label(style="float:left;")  Top Bar Advert:
+                    br
+                    label(style="float:left;")  Pick Advert:
+                    br
+                    if adverts
+                        select(name="adverts", id="adverts")
+                            each val in adverts
+                                option(value=val.advertisementid)=val.name
+                    br
+                    button(class="purchasebutton purchasebutton1", onclick="AddAdvertToPost(this, 'top')") Add Ad to Top
+                    button(class="purchasebutton purchasebutton1", onclick="AddAdvertToPost(this, 'bottom')") Add Ad to Bottom
+                    br
+                    br
+                    select(name="postadverts", id="postadverts" )
+                         if postadverts
+                            each val in postadverts
+                                option(value=val.postadvertisementid)=val.name+" "+val.position
+            br
+            input(type="submit", value="editpost")
+        

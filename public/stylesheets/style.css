@@ -1,0 +1,134 @@
+body {
+  padding: 10px 50px 50px 50px;
+  font: 1em "Courier New, Courier, monospace";
+  font-weight: bold;
+
+    /* background-image: url("../images/HomePage/Underpass-cyberpunk-bw-small.jpg"); */
+    /* background-image: url("../images/HomePage/BlueSubwayTile2.jpg");
+    /* background-size:     cover;  */                    /* <------ */
+    background-repeat:   repeat;
+    background-attachment: fixed;
+}
+
+a {
+  color: #00B7FF;
+}
+
+#main{position: relative;
+    width: 100%;}
+
+nav {width:100%; }
+nav a {padding:2px; font-family: Courier New, Courier, monospace; font-size: 1em; color:black; text-align: center; margin-right: 1%; text-decoration: none; }
+nav a:hover {color:pink; }
+/* background-image: url("../images/Nav/NavBlank.png"); */
+nav img {margin-right:5%;}
+/*.navlinks{margin-bottom: 40px;}*/
+
+g-plusone {margin-left:30%;float:right;}
+
+.mainblog { padding: 3%;}
+.mainblog heading {color:black; background-color: white;    }
+.mainblog header h1 a {color: black; text-decoration: none;}
+.mainblog header h1 a:hover { text-decoration: underline;}
+.mainblog p {color:black; background-color: white;  white-space: pre-wrap;  }
+.mainblog > div{background-color: white; padding: 3%;}
+
+.formpost { border: 1px solid black; padding: 20px;}
+
+.formpost div { padding: 1%;}
+
+.bioarticle {padding: 10px; margin:auto; }
+/*.bioarticle p{width: 70%;} */
+.articlemainparagraph {font-family: Courier New, Courier, monospace; font-weight: normal;}
+.blogposttitlehref{  font: 20px "Papyrus"; font-weight: bold; text-decoration: none; color: black;}
+
+.articleAdvertisement{border:1px solid black;}
+.articleAdvertisement img{padding: 10%;}
+.footer {width:50%; font-weight: normal; font-size: 0.75em }
+
+.portfolio {float:left; display : inline-flex; flex-wrap: wrap; width:40%; }
+
+.portfolioviewer{float:left;   width:45%; border: 10px solid black; }
+.portfolioviewboxlandscape{align-content: center; padding: 5%; }
+.portfolioviewboxportrait{align-content: center; padding: 5%; }
+.portfolioviewboxlandscape > img{width:100%; height:auto; display:block;}
+.portfolioviewboxportrait > img{width:50%; height:auto; display:block; margin:auto;}
+
+
+.galleryedit{float:left; display : inline-flex; flex-wrap: wrap; width:100%; }
+
+.bin{float:left; width:100%;}
+.bin > img{width:10%;height:auto;}
+/*.gallerythumbnail { padding:2%;display: inline-block;
+    vertical-align: middle; 
+    height: 100%; margin-bottom: 20px;}
+.gallerythumbnail img{width:100%; display:inline-block; vertical-align: middle; }*/
+
+.gallerythumbnail { 
+    padding:2%;
+    display: inline-block;
+    vertical-align: middle;  /* vertical alignment of the inline element */
+    height: 100%; 
+    margin-bottom: 20px;
+    transition:all 0.3s ease;
+    }
+.gallerythumbnail img{
+  width:100%;  
+   /*opacity:0.5;*/
+   }
+.gallerythumbnail span{
+  padding: 0% 5% 0% 0%;
+  color: black;
+  font-size: 1em;
+}
+.gallerythumbnail span:hover{
+  color: blue;
+}
+
+
+.gallerythumbnail img:hover{width:100%; display:inline-block; vertical-align: middle; opacity:1; -webkit-transform: scale(1.3);
+        -ms-transform: scale(1.3);
+        transform: scale(1.3);}
+
+.bordereddiv{border: 1px solid black; background-color: white; padding: 3%;}
+
+.purchasebutton {
+    background-color: pink; /* Green */
+    border: none;
+    color: white;
+    /*padding: 16px 32px; */
+    padding: 1% 2%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.75em;
+    /* margin: 4px 2px; */
+    margin: 2% 1%;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    
+}
+
+.purchasebutton1 {
+    background-color: white; 
+    color: black; 
+    border: 4px solid pink; ;
+    
+}
+
+.purchasebutton1:hover {
+    background-color:pink;
+    color: white;
+}
+
+.purchasebutton a {
+   
+    text-decoration: none;
+    color: black;
+}
+.purchasebutton1 a:hover {
+    background-color: pink;
+    color: white;
+}
+.footer{width:20%; color: white; background-color: black; padding:10px;}

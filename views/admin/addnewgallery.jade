@@ -1,0 +1,24 @@
+extends ../layout
+
+block content
+    if alertmessage
+        p(style="color: red")=alertmessage
+    if loggedin && isadmin
+         form(name="addnewgallery",  action="/admin/addnewgallery", method="post")
+                div
+                    label Gallery Name:
+                div
+                    input(
+                        type="text",
+                        name="galleryname"
+                    )
+                div
+                    label Gallery is Private?
+                div
+                    <input type="checkbox" name="galleryisprivate"> 
+                div
+                    label Is Default Gallery?
+                div
+                    <input type="checkbox" name="isdefault">
+                br
+                input(type="submit", value="Save Gallery")

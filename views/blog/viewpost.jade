@@ -1,0 +1,75 @@
+extends ../layoutblog
+
+block content
+    script(type="application/ld+json"). 
+        {
+            "@context": "http://schema.org/",
+            "@type": "Article","name": "#{post.posttitle}",
+            "image": {"@type": "ImageObject",  "height":"100", "width": "100", "url": "#{mainimagefilepath}"},
+            "author": {"@type": "Person", "name": "AlmosLataan"},
+            "headline": "#{post.posttitle}",
+            "publisher": {"@type":"Organization", "name": "AlmosLataan", "logo":{"URL": ""}},
+            "datePublished": "#{post.postdate}"}
+    //- div(class="fb-share-button", data-href="https://almoslataan.com/The-Distracting-Disinformation-War-12", data-layout="button_count", data-size="small", data-mobile-iframe="true")
+    //-     a(class="fb-xfbml-parse-ignore", target="_blank", href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Falmoslataan.com%2FThe-Distracting-Disinformation-War-12&amp;src=sdkpreparse") Share
+    
+    if alertmessage
+        p(style="color: red")=alertmessage
+    if post
+        if loggedin && isadmin
+            form(name="editpost", action="/blog/editpost", method="get")
+                input(type="hidden", name="postid" value=post.id)
+                input(type="submit", value="editpost")
+        
+        article(class="article", style="padding: 2%;")
+            div(class="articlebackground")
+                header
+                    h1= post.posttitle
+                    p
+                        time= (moment(post.postdate).format('MMM Do YYYY'))
+                    
+                if mainimage
+                    div(class="articleimage", style="display:inline")
+                        if mainimage.orientation=="L"
+                            img(class="articlelandscapeimage", src=mainimage.imagefilepath, alt=mainimage.imagealt, title=mainimage.imagetitle) 
+                        else
+                            img(class="articleportraitimage", src=mainimage.imagefilepath, alt=mainimage.imagealt, title=mainimage.imagetitle)
+                        if mainimage.imagebuylink != null &&  mainimage.imagebuylink != ""
+                            a(href=mainimage.imagebuylink, class="purchasebutton purchasebutton1") Purchase Print
+                        if mainimage.postimagecaption != undefined
+                            
+                            Label(style="font-size: 0.75em;")!="<i>"+mainimage.imagetitle+"</i>"
+                            br
+                            Label(style="font-size: 0.75em;")!=mainimage.postimagecaption
+                    
+                
+                if postadverts
+                    div(style="float:right;")
+                        <i>Please help support us by purchasing products through our amazon links:</i>
+                        br
+                        br
+                        div(style="display:inline;")
+                            each val in postadverts
+                                if val.position == "top"
+                                    !{val.html}
+
+                br
+                br
+                div(class="fb-share-button", data-href=posturl, data-layout="button_count", data-size="small", data-mobile-iframe="true")
+                    a(class="fb-xfbml-parse-ignore", target="_blank", href="https://www.facebook.com/sharer/sharer.php?u="+fburl+"&amp;src=sdkpreparse") Share
+                br
+                p(class="articlemainparagraph")!=post.postbody
+                br
+                div(class="fb-share-button", data-href=posturl, data-layout="button_count", data-size="small", data-mobile-iframe="true")
+                    a(class="fb-xfbml-parse-ignore", target="_blank", href="https://www.facebook.com/sharer/sharer.php?u="+fburl+"&amp;src=sdkpreparse") Share
+                if postadverts
+                    br
+                    br
+                    <i>Please help support us by purchasing products through our amazon links:</i>
+                    br
+                    br
+                    div(style="display:inline;")
+                        each val in postadverts
+                            !{val.html}
+            //- div(class="articleAdvertisement" style="width:20%, float:right;display:inline-block; ;")
+            //-    img(src="/uploads/Venetian.jpg"  alt="Tiles above and below and Van Gogh Style Tree")

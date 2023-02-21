@@ -1,0 +1,46 @@
+extends ../layout
+
+block content
+    div(class="bordereddiv")
+        label Image Uploads
+        br
+        form(name="editimage", action="/admin/editimage", method="post")
+            //- div
+            //-     label Image Name:
+            //- div
+            //-     input(
+            //-         type="text",
+            //-         name="imagename",
+            //-         value=image.imagename
+            //-     )
+            div
+                label Image Title
+            div
+                input(
+                     type="hidden",
+                     name="imageid",
+                     value=image.imageid
+                )
+                input(
+                    type="text",
+                    name="imagetitle",
+                    value=image.imagetitle
+                )
+            div
+                label Image Alt Text:
+            div
+                textarea(
+                    name="alttext", 
+                    cols="90", 
+                    rows="10",
+                    value=image.imagealttext
+                )
+            div
+                label Image Buy Link:
+            div
+                input(
+                    type="text",
+                    name="imagebuylink",
+                    value=image.imagebuylink
+                )
+            input(type="submit", value="Update mage")

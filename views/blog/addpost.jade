@@ -1,0 +1,33 @@
+extends ../layout
+
+block content
+    form(name="addpost", action="/blog/addpost", method="post", class="formpost")
+        div
+            label Post Title:
+        div
+            input(
+                type="text",
+                name="posttitle"
+            )
+        div
+            label Post Excerpt:
+            br
+        div
+            textarea(
+                name="postexcerpt", 
+                cols="120", 
+                rows="10",
+                maxlength="500"
+            )
+        div
+            label Post Body:
+            br
+        div
+            textarea(
+                name="postbody", 
+                cols="120", 
+                rows="20"
+            )
+        br
+        input(type="submit", value="addpost")
+        

@@ -1,0 +1,56 @@
+extends ../layout
+
+block content
+    if alertmessage
+        p(style="color: red")=alertmessage
+    if loggedin && isadmin
+        if portfoliogalleryid
+            form(name="addportfolioimage", enctype="multipart/form-data", action="/portfolio/addportfolioimage", method="post")
+                input(type="hidden", name="gallerytotal", value=gallerytotal)
+                div
+                    label Image Name:
+                div
+                    input(
+                        type="text",
+                        name="imagename"
+                    )
+                div
+                    label Choose Image to Upload
+                div
+                    input(type="file", name="file")
+                div
+                    label Image Title
+                div
+                    input(
+                        type="text",
+                        name="imagetitle"
+                    )
+                div
+                    label Image Alt Text:
+                div
+                    textarea(
+                        name="alttext", 
+                        cols="90", 
+                        rows="10"
+                    )
+                div
+                    label Image Caption:
+                div
+                    textarea(
+                        name="imagecaption", 
+                        cols="90", 
+                        rows="10"
+                    )
+                div
+                    Label Size controlling dimension:
+                div
+                    select(name="sizecontrollingdimension")
+                        option(value="width") width
+                        option(value="width") height
+                div
+                    label Size controlling percentage
+                div
+                    input(type="text", name="sizecontrollingpercentage")
+                br
+                input(type="hidden", name="portfoliogalleryid" value=portfoliogalleryid)
+                input(type="submit", value="Add Image")

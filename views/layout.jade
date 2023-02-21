@@ -1,0 +1,60 @@
+doctype html
+html
+  head
+    title= title
+    //-link(rel="stylesheet", href='http://www.w3schools.com/lib/w3.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    
+    meta(name='google-site-verification', content='9_tUz7QW3PItK3w4imS9s9LSqGvbGSDh__0Edj_pNJM')
+    meta(name="google-site-verification" content="KOkA7suzQ1iLTHI00YJUa6RuB8MJ6IsziZNK9MIxErc")
+    meta(name='p:domain_verify', content='06ae7a2ed85608b9b3d1d50660376f4a')
+    script(async, defer, src='https://apis.google.com/js/platform.js')
+    script(src='https://www.google.com/recaptcha/api.js')
+    script. 
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-83385532-1', 'auto');
+      ga('send', 'pageview');
+  body
+    div(id="fb-root")
+    script.
+      (function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s); js.id = id;js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.8";fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'));
+    div(id='main' width="100%")
+      
+      //hr(width="100%" )
+      nav(width="100%")
+        a(href ="/", style="font-size: 1.5em; margin-right:5%") 
+          img(src="/images/Nav/LogoBanner.png" alt="navigation link to AlmosLataan home page" title ="AlmosLataan home page" onmouseover="this.src='/images/Nav/LogoBanner_Blue.png'" onmouseout="this.src='/images/Nav/LogoBanner.png'")
+        a(href ="/portfolio" class="navlinks") Portfolio
+        a(href ="/blog" class="navlinks") Blog
+          
+          //-img(src="/images/Nav/NavBlog.png" alt="navigation link to photography blog" title ="navigation link to photography blog" onmouseover="this.src='/images/Nav/NavBlog_Blue.png'" onmouseout="this.src='/images/Nav/NavBlog.png'") 
+        
+        a(href ="/store" class="navlinks") Store
+          //-img(src="/images/Nav/NavStore.png" alt="navigation link to photography store page" title ="navigation link to photography store page"  onmouseover="this.src='/images/Nav/NavStore_Blue.png'" onmouseout="this.src='/images/Nav/NavStore.png'")
+        a(href ="/contact" class="navlinks") About
+          //-img(src="/images/Nav/NavContact.png" alt="navigation link to photography biography and contact information" title ="navigation link to photography biography and contact information"  onmouseover="this.src='/images/Nav/NavContact_Blue.png'" onmouseout="this.src='/images/Nav/NavContact.png'")
+        if !loggedin
+          a(href ="/login" class="navlinks") Login
+            //-img(src="/images/Nav/NavLoginButton.png" alt="navigation link to Login Page" title ="navigation link to Login Page" onmouseover="this.src='/images/Nav/NavLoginButton_Blue.png'" onmouseout="this.src='/images/Nav/NavLoginButton.png'")
+        else
+          a(href ="/admin" class="navlinks") Admin
+          form(name="logout", action="/logout", method="post")
+            input(type="submit", value="logout")
+        div(id="socialcontainer", style="float:right; display: inline-block;")
+        div(class="fb-like", data-href="http://almoslataan.com", data-layout="button", data-action="like", data-size="small", data-show-faces="false", data-share="true")
+        div(style="margin: 0 0 0 0;border:solid;", class="g-plusone", data-size="medium", data-annotation="none", data-width="120\b")
+        
+      
+        
+      
+      hr(width="100%")
+      if (errmsg != null || errmsg == undefined)
+        p= errmsg
+      block content
+      br
+      br
+      hr(width="100%")
+      hr(width="60%")
+      
+      div(class="footer")
+        p Website Design by AlmosLataan.  AlmosLataan © 2016. Material on this site may not be reproduced, distributed, transmitted or otherwise used without the prior written consent of AlmosLataan.com

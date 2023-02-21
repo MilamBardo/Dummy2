@@ -1,0 +1,31 @@
+g-plusone {margin-left:30%;}
+
+body {
+  font: 1em "Courier Regular";
+  background-image: url("../images/HomePage/underpass-cyberpunk-coloured-small.jpg");
+  background-size:     cover;                      /* <------ */
+    background-repeat:   no-repeat;
+
+}
+
+a {
+  color: #00B7FF;
+}
+
+#container{
+    width: 100%; height:100%;display:inline-block;}
+
+.navdiv{float:left; width: 20%;}
+.navvertical{ height: 100%;margin-top: 5%; border-left: 1px solid black;}
+.navvertical > ul{list-style-type: none;}
+
+.navvertical a {font-family: Courier New, Courier, monospace; font-size: 1em; 
+color: black; text-align: center; margin-right: 1%;  text-decoration: none; }
+.navvertical a:hover {color:blue;}
+/* background-image: url("../images/Nav/NavBlank.png"); */
+.navvertical img {margin-right:5%;}
+/*.navlinks{margin-bottom: 40px;}*/
+
+.footer {font-family: Courier New, Courier, monospace ; font-weight: normal; font-size: 0.5em; margin-right: 2%;}
+
+.maincontent{float:left; width: 80%}

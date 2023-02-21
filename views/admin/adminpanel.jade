@@ -1,0 +1,71 @@
+extends ../layout
+
+block content
+    if errmsg
+        p=errmsg
+    div(class="bordereddiv")
+        label Image Uploads
+        br
+        form(name="uploadimage", enctype="multipart/form-data", action="/admin/uploadimage", method="post")
+            div
+                label Image Name:
+            div
+                input(
+                    type="text",
+                    name="imagename"
+                )
+            div
+                label Choose Image to Upload
+            div
+                input(type="file", name="file")
+            div
+                label Image Title
+            div
+                input(
+                    type="text",
+                    name="imagetitle"
+                )
+            div
+                label Image Alt Text:
+            div
+                textarea(
+                    name="alttext", 
+                    cols="90", 
+                    rows="10"
+                )
+            div
+                label Image Buy Link:
+            div
+                input(
+                    type="text",
+                    name="imagebuylink"
+                )
+            br
+            input(type="submit", value="Add Image")
+            br
+            br
+        form(name="editimage", action="/admin/editimage", method="get")
+            select(name="imagelist")
+                if imagelist != undefined
+                    each val in imagelist
+                        option(value=val.imageid)=val.imagename
+            input(type="submit", value="Edit image")
+    br
+    div(class="bordereddiv")
+        label Galleries
+        br
+        
+        form(name="addnewgallery", action="/admin/addnewgallery", method="get")
+            input(type="submit", value="Add new gallery")
+        form(name="editgallery", action="/admin/editgallery", method="get")
+            select(name="gallerylist")
+                if galleries != undefined
+                    each val in galleries
+                        option(value=val.galleryid)=val.galleryname
+            input(type="submit", value="Edit gallery")
+    div(class="bordereddiv")
+        label DB Backups
+        br
+        form(name="backupdatabase", action="/admin/backupdatabase", method="get")
+            input(type="submit", value="New Database Backup")
+        

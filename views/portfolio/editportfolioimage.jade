@@ -1,0 +1,50 @@
+extends ../layout
+
+block content
+    if loggedin && isadmin
+        if alertmessage
+            p(style="color: red")=alertmessage
+        form(name="editgalleryimage", action="/portfolio/editportfolioimage", method="post", class="formgalleryimage")
+            div
+                Label Image Title
+            div
+                input(
+                        type="text",
+                        name="imagetitle",
+                        value=galleryimage.imagetitle
+                    )
+            div
+                label Image Caption
+            div
+                textarea(
+                        name="galleryimagecaption", 
+                        cols="90", 
+                        rows="10"
+                    )=galleryimage.galleryimagecaption
+                input(type="hidden", name="galleryimageid", value=galleryimage.galleryimageid)
+                input(type="hidden", name="galleryimageordernumber", value=galleryimage.galleryimageordernumber)
+            div
+                Label AltText
+            div
+                textarea(
+                        name="alttext", 
+                        cols="90", 
+                        rows="10"
+                    )=galleryimage.imagealt
+            div
+                Label Size controlling dimension:
+            div
+                select(name="sizecontrollingdimension")
+                    if galleryimage.sizecontrollingdimension == "width"
+                        option(value="width" selected) width
+                        option(value="height") height
+                    else if galleryimage.sizecontrollingdimension == "height"
+                        option(value="width") width
+                        option(value="height" selected) height
+            div
+                label Size controlling percentage
+            div
+                input(type="text", name="sizecontrollingpercentage", value=galleryimage.sizecontrollingpercentage)
+            br
+            input(type="submit", value="editpost")
+        
